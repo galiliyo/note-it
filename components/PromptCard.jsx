@@ -5,7 +5,8 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
-const PromptCard = ({ post, handleEdit, handleDelete, handleTagClick }) => {
+const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }) => {
+  console.log("note", note);
   const { data: session } = useSession();
   const pathName = usePathname();
   const router = useRouter();
@@ -13,76 +14,78 @@ const PromptCard = ({ post, handleEdit, handleDelete, handleTagClick }) => {
   const [copied, setCopied] = useState("");
 
   const handleProfileClick = () => {
-    console.log(post);
+    console.log(note);
 
-    if (post.creator._id === session?.user.id) return router.push("/profile");
+    if (note.creator._id === session?.user.id) {
+      debugger;
+      return router.push("/profile");
+    }
 
-    router.push(`/profile/${post.creator._id}?name=${post.creator.username}`);
+    router.push(`/profile/${note.creator._id}?name=${note.creator.username}`);
   };
 
   const handleCopy = () => {
-    setCopied(post.prompt);
-    navigator.clipboard.writeText(post.prompt);
+    setCopied(note.prompt);
+    navigator.clipboard.writeText(note.prompt);
     setTimeout(() => setCopied(false), 3000);
   };
-
+  if (!note) return null;
   return (
-    <div className='prompt_card'>
-      <div className='flex justify-between items-start gap-5'>
+    <div className="prompt_card">
+      <div className="flex justify-between items-start gap-5">
         <div
-          className='flex-1 flex justify-start items-center gap-3 cursor-pointer'
+          className="flex-1 flex justify-start items-center gap-3 cursor-pointer"
           onClick={handleProfileClick}
         >
           <Image
-            src={post.creator.image}
-            alt='user_image'
+            src={note?.creator?.image}
+            alt="user_image"
             width={40}
             height={40}
-            className='rounded-full object-contain'
+            className="rounded-full object-contain"
           />
 
-          <div className='flex flex-col'>
-            <h3 className='font-satoshi font-semibold text-gray-900'>
-              {post.creator.username}
+          <div className="flex flex-col">
+            <h3 className="font-satoshi font-semibold text-gray-900">
+              {note.creator.username}
             </h3>
-            <p className='font-inter text-sm text-gray-500'>
-              {post.creator.email}
+            <p className="font-inter text-sm text-gray-500">
+              {note.creator.email}
             </p>
           </div>
         </div>
 
-        <div className='copy_btn' onClick={handleCopy}>
+        <div className="copy_btn" onClick={handleCopy}>
           <Image
             src={
-              copied === post.prompt
+              copied === note.prompt
                 ? "/assets/icons/tick.svg"
                 : "/assets/icons/copy.svg"
             }
-            alt={copied === post.prompt ? "tick_icon" : "copy_icon"}
+            alt={copied === note.prompt ? "tick_icon" : "copy_icon"}
             width={12}
             height={12}
           />
         </div>
       </div>
 
-      <p className='my-4 font-satoshi text-sm text-gray-700'>{post.prompt}</p>
+      <p className="my-4 font-satoshi text-sm text-gray-700">{note?.prompt}</p>
       <p
-        className='font-inter text-sm blue_gradient cursor-pointer'
-        onClick={() => handleTagClick && handleTagClick(post.tag)}
+        className="font-inter text-sm blue_gradient cursor-pointer"
+        onClick={() => handleTagClick && handleTagClick(note.tag)}
       >
-        #{post.tag}
+        #{note.tag}
       </p>
-
-      {session?.user.id === post.creator._id && pathName === "/profile" && (
-        <div className='mt-5 flex-center gap-4 border-t border-gray-100 pt-3'>
+      {session?.user.id === note.creator._id && pathName === "/profile" && (
+        <div className="mt-5 flex-center gap-4 border-t border-gray-100 pt-3">
           <p
-            className='font-inter text-sm green_gradient cursor-pointer'
+            className="font-inter text-sm green_gradient cursor-pointer"
             onClick={handleEdit}
           >
             Edit
           </p>
           <p
-            className='font-inter text-sm orange_gradient cursor-pointer'
+            className="font-inter text-sm orange_gradient cursor-pointer"
             onClick={handleDelete}
           >
             Delete
