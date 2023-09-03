@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import Provider from "@/components/Provider";
 import Nav from "@/components/Nav";
+import React from "react";
 
 export const metadata = {
   title: "Noted",

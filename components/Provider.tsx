@@ -7,7 +7,7 @@ interface props {
   session?: Session;
 }
 const Provider = ({ children, session }: props) => {
-  // console.log("session", session);
+  console.log("session", session);
   return <SessionProvider session={session}>{children}</SessionProvider>;
 };
 
