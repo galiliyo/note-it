@@ -1,4 +1,5 @@
-import PromptCard from "./PromptCard";
+import NoteCard from "./NoteCard";
+import { INote } from "@/models/note";
 
 interface Props {
   name: string;
@@ -16,8 +17,8 @@ const Profile = ({ name, desc, data, handleEdit, handleDelete }: Props) => {
       <p className="desc text-left">{desc}</p>
 
       <div className="mt-10 prompt_layout">
-        {data.map((note) => (
-          <PromptCard
+        {data.map((note: INote) => (
+          <NoteCard
             key={note._id}
             note={note}
             handleEdit={() => handleEdit && handleEdit(note)}

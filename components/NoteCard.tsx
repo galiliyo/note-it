@@ -2,21 +2,27 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useSession  } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { INote } from "@/models/note";
-import { Session } from "next-auth";
 
 interface props {
   note: INote;
-  handleEdit?: ()=>void;
-   handleDelete?: ()=>void;
-  handleTagClick?: (v:string)=>void;
+  handleEdit: (v: INote) => void;
+  handleDelete: (v: INote) => void;
+  handleTagClick?: (v: string) => void;
 }
 
-const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }:props) => {
+const NoteCard = ({
+  note,
+  handleEdit,
+  handleDelete,
+  handleTagClick,
+}: props) => {
   console.log("note", note);
   const { data: session } = useSession();
+  console.log("session", session);
+
   const pathName = usePathname();
   const router = useRouter();
 
@@ -25,9 +31,8 @@ const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }:props) =>
   const handleProfileClick = () => {
     console.log(note);
 
-    if (note.creator._id === session?.user?.id) {
-      debugger;
-       return router.push("/profile");
+    if (note.creator._id === (session?.user as { id: string }).id) {
+      return router.push("/profile");
     }
 
     router.push(`/profile/${note.creator._id}?name=${note.creator.username}`);
@@ -85,17 +90,17 @@ const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }:props) =>
       >
         #{note.tag}
       </p>
-      {session?.user?.id === note.creator._id && pathName === "/profile" && (
+      {session?.user?.id === note.creator._id && (
         <div className="mt-5 flex-center gap-4 border-t border-gray-100 pt-3">
           <p
             className="font-inter text-sm green_gradient cursor-pointer"
-            onClick={handleEdit}
+            onClick={() => handleEdit(note)}
           >
             Edit
           </p>
           <p
             className="font-inter text-sm orange_gradient cursor-pointer"
-            onClick={handleDelete}
+            onClick={() => handleDelete(note)}
           >
             Delete
           </p>
@@ -105,4 +110,4 @@ const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }:props) =>
   );
 };
 
-export default PromptCard;
+export default NoteCard;

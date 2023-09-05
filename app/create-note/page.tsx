@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -12,9 +12,8 @@ const CreateNote = () => {
 
   const [submitting, setIsSubmitting] = useState(false);
   const [note, setNote] = useState({ content: "", tag: "" });
-  console.log(note)
-  const createNote = async (e) => {
-    debugger
+  console.log(note);
+  const createNote = async (e: SyntheticEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -23,7 +22,7 @@ const CreateNote = () => {
         method: "POST",
         body: JSON.stringify({
           content: note.content,
-          userId: session?.user.id,
+          userId: (session?.user as { id: string }).id,
           tag: note.tag,
         }),
       });

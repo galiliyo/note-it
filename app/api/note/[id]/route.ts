@@ -1,21 +1,28 @@
-import Prompt from "@/models/prompt";
 import { connectToDB } from "@/utils/database";
+import Note from "../../../../models/note";
 
-export const GET = async (request, { params }) => {
+export const GET = async (request: any, { params }: any) => {
   try {
     await connectToDB();
 
-    const prompt = await Prompt.findById(params.id).populate("creator");
-    if (!prompt) return new Response("Note Not Found", { status: 404 });
+    const note = await Note.findById(params.id).populate("creator");
+    if (!note) return new Response("Note Not Found", { status: 404 });
 
-    return new Response(JSON.stringify(prompt), { status: 200 });
+    return new Response(JSON.stringify(note), { status: 200 });
   } catch (error) {
     return new Response("Internal Server Error", { status: 500 });
   }
 };
 
-export const PATCH = async (request, { params }) => {
-  const { prompt, tag } = await request.json();
+export const PATCH = async (
+  request: {
+    json: () =>
+      | PromiseLike<{ content: any; tag: any }>
+      | { content: any; tag: any };
+  },
+  { params }: any,
+) => {
+  const { content, tag } = await request.json();
 
   try {
     await connectToDB();
@@ -28,7 +35,7 @@ export const PATCH = async (request, { params }) => {
     }
 
     // Update the prompt with new data
-    existingNote.prompt = prompt;
+    existingNote.content = content;
     existingNote.tag = tag;
 
     await existingNote.save();
@@ -39,7 +46,7 @@ export const PATCH = async (request, { params }) => {
   }
 };
 
-export const DELETE = async (request, { params }) => {
+export const DELETE = async (request: any, { params }: any) => {
   try {
     await connectToDB();
 
