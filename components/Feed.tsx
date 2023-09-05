@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEventHandler, SyntheticEvent } from "react";
 
 import PromptCard from "./PromptCard";
+import { INote } from "@/models/note";
 
-const NoteCardList = ({ data, handleTagClick }) => {
+const NoteCardList = ({ data, handleTagClick } : {data : INote[] , handleTagClick : (v:string)=>void}) => {
   console.log("data", data);
   return (
     <div className="mt-16 prompt_layout">
@@ -20,17 +21,17 @@ const NoteCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-  const [allNotes, setAllNotes] = useState([]);
+  const [allNotes, setAllNotes] = useState<INote[]>([]);
 
   // Search states
-  const [searchText, setSearchText] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState(null);
-  const [searchedResults, setSearchedResults] = useState([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchedResults, setSearchedResults] = useState<INote[]>([]);
 
   const fetchNotes = async () => {
-    const response = await fetch("/api/prompt");
+    const response = await fetch("/api/note");
     const data = await response.json();
-
+    console.log(data)
     setAllNotes(data);
   };
 
@@ -38,30 +39,30 @@ const Feed = () => {
     fetchNotes();
   }, []);
 
-  const filterPrompts = (searchtext) => {
+  const filterPrompts = (searchtext :string) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     return allNotes.filter(
       (item) =>
         regex.test(item.creator.username) ||
         regex.test(item.tag) ||
-        regex.test(item.prompt),
+        regex.test(item.content),
     );
   };
 
-  const handleSearchChange = (e) => {
-    clearTimeout(searchTimeout);
+  const handleSearchChange = (e : any) => {
+    clearTimeout(searchTimeout as NodeJS.Timeout);
     setSearchText(e.target.value);
-
+const timeout =  setTimeout(() => {
+  const searchResult = filterPrompts(e.target.value);
+  setSearchedResults(searchResult);
+}, 500)
     // debounce method
     setSearchTimeout(
-      setTimeout(() => {
-        const searchResult = filterPrompts(e.target.value);
-        setSearchedResults(searchResult);
-      }, 500),
+        timeout
     );
   };
 
-  const handleTagClick = (tagName) => {
+  const handleTagClick = (tagName : string) => {
     setSearchText(tagName);
 
     const searchResult = filterPrompts(tagName);

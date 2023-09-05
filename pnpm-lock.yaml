@@ -17,6 +17,9 @@ dependencies:
   mongoose:
     specifier: ^7.1.0
     version: 7.1.0
+  mongoose-ts:
+    specifier: ^0.1.0
+    version: 0.1.0
   next:
     specifier: 13.3.4
     version: 13.3.4(react-dom@18.2.0)(react@18.2.0)
@@ -409,6 +412,11 @@ packages:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: false
 
+  /clone@1.0.4:
+    resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
+    engines: {node: '>=0.8'}
+    dev: false
+
   /color-support@1.1.3:
     resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
     hasBin: true
@@ -452,6 +460,12 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+    dev: false
+
+  /defaults@1.0.4:
+    resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
+    dependencies:
+      clone: 1.0.4
     dev: false
 
   /delegates@1.0.0:
@@ -783,6 +797,12 @@ packages:
       socks: 2.7.1
     optionalDependencies:
       saslprep: 1.0.3
+    dev: false
+
+  /mongoose-ts@0.1.0:
+    resolution: {integrity: sha512-5WIdbRe8bDLicybbYhYPbX05ziqAMJaY4rFcBHvVuwF1MmPR5AZ62B5mx9VxYCFlIRiiLHrWjXOxJD18AOhJQQ==}
+    dependencies:
+      defaults: 1.0.4
     dev: false
 
   /mongoose@7.1.0:

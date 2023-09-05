@@ -2,31 +2,40 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useSession  } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { INote } from "@/models/note";
+import { Session } from "next-auth";
 
-const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }) => {
+interface props {
+  note: INote;
+  handleEdit?: ()=>void;
+   handleDelete?: ()=>void;
+  handleTagClick?: (v:string)=>void;
+}
+
+const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }:props) => {
   console.log("note", note);
   const { data: session } = useSession();
   const pathName = usePathname();
   const router = useRouter();
 
-  const [copied, setCopied] = useState("");
+  const [copied, setCopied] = useState<boolean | string>(false);
 
   const handleProfileClick = () => {
     console.log(note);
 
-    if (note.creator._id === session?.user.id) {
+    if (note.creator._id === session?.user?.id) {
       debugger;
-      return router.push("/profile");
+       return router.push("/profile");
     }
 
     router.push(`/profile/${note.creator._id}?name=${note.creator.username}`);
   };
 
   const handleCopy = () => {
-    setCopied(note.prompt);
-    navigator.clipboard.writeText(note.prompt);
+    setCopied(note.content);
+    navigator.clipboard.writeText(note.content);
     setTimeout(() => setCopied(false), 3000);
   };
   if (!note) return null;
@@ -58,25 +67,25 @@ const PromptCard = ({ note, handleEdit, handleDelete, handleTagClick }) => {
         <div className="copy_btn" onClick={handleCopy}>
           <Image
             src={
-              copied === note.prompt
+              copied === note.content
                 ? "/assets/icons/tick.svg"
                 : "/assets/icons/copy.svg"
             }
-            alt={copied === note.prompt ? "tick_icon" : "copy_icon"}
+            alt={copied === note.content ? "tick_icon" : "copy_icon"}
             width={12}
             height={12}
           />
         </div>
       </div>
 
-      <p className="my-4 font-satoshi text-sm text-gray-700">{note?.prompt}</p>
+      <p className="my-4 font-satoshi text-sm text-gray-700">{note?.content}</p>
       <p
         className="font-inter text-sm blue_gradient cursor-pointer"
         onClick={() => handleTagClick && handleTagClick(note.tag)}
       >
         #{note.tag}
       </p>
-      {session?.user.id === note.creator._id && pathName === "/profile" && (
+      {session?.user?.id === note.creator._id && pathName === "/profile" && (
         <div className="mt-5 flex-center gap-4 border-t border-gray-100 pt-3">
           <p
             className="font-inter text-sm green_gradient cursor-pointer"

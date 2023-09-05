@@ -6,24 +6,25 @@ import { useRouter } from "next/navigation";
 
 import Form from "@/components/Form";
 
-const CreatePrompt = () => {
+const CreateNote = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
   const [submitting, setIsSubmitting] = useState(false);
-  const [post, setPost] = useState({ prompt: "", tag: "" });
-
-  const createPrompt = async (e) => {
+  const [note, setNote] = useState({ content: "", tag: "" });
+  console.log(note)
+  const createNote = async (e) => {
+    debugger
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/prompt/new", {
+      const response = await fetch("/api/note/new", {
         method: "POST",
         body: JSON.stringify({
-          prompt: post.prompt,
+          content: note.content,
           userId: session?.user.id,
-          tag: post.tag,
+          tag: note.tag,
         }),
       });
 
@@ -40,12 +41,12 @@ const CreatePrompt = () => {
   return (
     <Form
       type="Create"
-      post={post}
-      setPost={setPost}
+      note={note}
+      setNote={setNote}
       submitting={submitting}
-      handleSubmit={createPrompt}
+      handleSubmit={createNote}
     />
   );
 };
 
-export default CreatePrompt;
+export default CreateNote;
